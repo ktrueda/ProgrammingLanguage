@@ -59,21 +59,15 @@ fun date_to_string(d: int*int*int) =
 
 
 fun number_before_reaching_sum(sum: int, ns: int list) = 
-  (* how can i simplify this function? *)
-  let fun countup(nums: int list, curr_sum: int, ind: int) = 
-    if curr_sum >= sum
-      then ind
-    else
-      countup(tl nums, curr_sum + (hd nums), ind + 1)
-  in
-    if sum <= (hd ns)
-    then 1
-    else countup(ns, 0, 0)
-  end
+  if null ns
+    then 0
+  else if sum <= (hd ns)
+    then 0
+  else 1 + number_before_reaching_sum(sum - (hd ns), tl ns)
 
 
 fun what_month(d: int) = 
-  number_before_reaching_sum(d, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
+  1 + number_before_reaching_sum(d, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
 
 fun month_range(f: int, t:int) = 

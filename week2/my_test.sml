@@ -46,9 +46,9 @@ val test_date_to_string = date_to_string (2013, 6, 1) = "June 1, 2013"
 
 (* test code for number_before_reaching_sum *)
 val test_nbrs_1 = number_before_reaching_sum (10, [1,2,3,4,5]) = 3
-val test_nbrs_2 = number_before_reaching_sum (1, [1,2,3,4,5]) = 1
-val test_nbrs_3 = number_before_reaching_sum (1, [2,2,3,4,5]) = 1
-val test_nbrs_4 = number_before_reaching_sum (10, [1,2,3,4]) = 4
+val test_nbrs_2 = number_before_reaching_sum (1, [1,2,3,4,5]) = 0
+val test_nbrs_3 = number_before_reaching_sum (1, [2,2,3,4,5]) = 0
+val test_nbrs_4 = number_before_reaching_sum (10, [1,2,3,4]) = 3
 
 
 (* test code for what_month *)
