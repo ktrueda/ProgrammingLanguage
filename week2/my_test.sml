@@ -48,16 +48,23 @@ val test_date_to_string = date_to_string (2013, 6, 1) = "June 1, 2013"
 val test_nbrs_1 = number_before_reaching_sum (10, [1,2,3,4,5]) = 3
 val test_nbrs_2 = number_before_reaching_sum (1, [1,2,3,4,5]) = 1
 val test_nbrs_3 = number_before_reaching_sum (1, [2,2,3,4,5]) = 1
+val test_nbrs_4 = number_before_reaching_sum (10, [1,2,3,4]) = 4
 
 
 (* test code for what_month *)
 val test_what_month_1 = what_month 70 = 3
 val test_what_month_2 = what_month 32 = 2
 val test_what_month_3 = what_month 1 = 1
+val test_what_month_4 = what_month 365 = 12
+val test_what_month_5 = what_month 364 = 12
+val test_what_month_6 = what_month 31 = 1
+val test_what_month_7 = what_month 59 = 2
 
 
 (* test code for manth_range *)
 val test_month_range_1 = month_range (31, 34) = [1,2,2,2]
+val test_month_range_2 = month_range (364, 365) = [12, 12]
+val test_month_range_3 = month_range (5, 3) = []
 
 
 (* test code for oldest *)

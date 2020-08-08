@@ -63,8 +63,6 @@ fun number_before_reaching_sum(sum: int, ns: int list) =
   let fun countup(nums: int list, curr_sum: int, ind: int) = 
     if curr_sum >= sum
       then ind
-    else if curr_sum + (hd nums) = sum
-      then ind 
     else
       countup(tl nums, curr_sum + (hd nums), ind + 1)
   in
@@ -79,7 +77,9 @@ fun what_month(d: int) =
 
 
 fun month_range(f: int, t:int) = 
-  if f = t
+  if f > t
+    then []
+  else if f = t
     then [what_month(f)]
   else what_month(f) :: month_range(f+1, t)
 
