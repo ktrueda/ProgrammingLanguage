@@ -118,7 +118,64 @@ fun similar_names (ss: string list list, fullname: {first: string, middle:string
    end
 
 
+fun card_eq(x: card, y: card) = (#1 x) = (#1 y) andalso (#2 x) = (#2 y)
 
+
+fun card_color (c: card) = 
+  (* Write a function card_color, which takes a card and returns its color
+  * (spades and clubs are black,
+  * diamonds and hearts are red). Note: One case-expression is enough.
+  *)
+  case (#1 c) of 
+       Clubs => Black
+     | Diamonds => Red
+     | Spades => Black
+     | Hearts => Red
+
+fun card_value(c: card) = 
+  (*
+  * Write a function card_value, which takes a card and returns its value
+  * (numbered cards have their
+  * number as the value, aces are 11, everything else is 10). Note: One
+  * case-expression is enough.
+  *)
+  case (#2 c) of
+       King => 10
+     | Queen => 10
+     | Jack => 10
+     | Ace => 11
+     | Num(i) => i
+
+fun remove_card (cs: card list, c :card, e: exn) = 
+  (*
+  * Write a function remove_card, which takes a list of cards cs, a card c, and
+  * an exception e. It returns a
+  * list that has all the elements of cs except c. If c is in the list more than
+  * once, remove only the first one.
+  * If c is not in the list, raise the exception e. You can compare cards with
+  * =.
+  *)
+  case cs of
+       [] => raise e
+     | x :: xs => if x = c then xs else x :: remove_card(xs, c, e)
+
+fun all_same_color (cs: card list) = 
+  (*
+  * Write a function all_same_color, which takes a list of cards and returns true
+  * if all the cards in the
+  * list are the same color. Hint: An elegant solution is very similar to one of
+  * the functions using nested pattern-matching in the lectures.
+  *)
+  let 
+    fun all_same_color_(cs_: card list, c:color) = 
+      if null cs_
+      then true
+      else if card_color(hd cs_) = c 
+      then all_same_color_(tl cs_, c)
+      else false
+  in
+    all_same_color_(tl cs, card_color(hd cs))
+  end
 
 
 

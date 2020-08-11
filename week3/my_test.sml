@@ -24,15 +24,27 @@ val test_similar_names_1 = similar_names ([["Fred","Fredrick"],["Elizabeth","Bet
 	    [{first="Fred", last="Smith", middle="W"}, {first="Fredrick", last="Smith", middle="W"},
 	     {first="Freddie", last="Smith", middle="W"}, {first="F", last="Smith", middle="W"}]
 
+
+
+val test_card_eq_1 = card_eq((Clubs, Num 2), (Clubs, Num 2)) = true
+val test_card_eq_2 = card_eq((Hearts, King), (Hearts, Num 2)) = false
+val test_card_eq_3 = card_eq((Diamonds, Num 2), (Clubs, Num 2)) = false
+
+
+val test_card_color_1 = card_color (Clubs, Num 2) = Black
+
+val test_card_value_1 = card_value (Clubs, Num 2) = 2
+val test_card_value_2 = card_value (Clubs, King) = 10
+val test_card_value_3 = card_value (Clubs, Ace) = 11
+
+val test_remove_card_1 = remove_card ([(Hearts, Ace)], (Hearts, Ace), IllegalMove) = []
+val test_remove_card_2 = remove_card ([(Hearts, Ace), (Diamonds, Num 2)], (Hearts, Ace), IllegalMove) = [(Diamonds, Num 2)]
+val test_remove_card_3 = (remove_card ([(Diamonds, Num 2)], (Hearts, Ace), IllegalMove) handle IllegalMove => []) = []
+
+val test_all_same_color_1 = all_same_color [(Hearts, Ace), (Hearts, Ace)] = true
+val test_all_same_color_2 = all_same_color [(Hearts, Ace), (Clubs, Ace)] = false
+
 (*
-val test5 = card_color (Clubs, Num 2) = Black
-
-val test6 = card_value (Clubs, Num 2) = 2
-
-val test7 = remove_card ([(Hearts, Ace)], (Hearts, Ace), IllegalMove) = []
-
-val test8 = all_same_color [(Hearts, Ace), (Hearts, Ace)] = true
-
 val test9 = sum_cards [(Clubs, Num 2),(Clubs, Num 2)] = 4
 
 val test10 = score ([(Hearts, Num 2),(Clubs, Num 4)],10) = 4
