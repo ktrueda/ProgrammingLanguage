@@ -32,11 +32,15 @@ fun all_except_option(target: string, lst: string list) =
   * to compare strings. Sample solution is around 8 lines
   *)
   let fun is_include(ss: string list) = 
-    if null ss
-    then false
-    else if (hd ss) = target
-    then true
-    else is_include(tl ss)
+      if null ss
+      then false
+      else if (hd ss) = target
+      then true
+      else is_include(tl ss)
+    fun my_valOf v = 
+      case v of
+           NONE => []
+         | SOME i => i 
   in
     if not (is_include(lst))
     then NONE
@@ -48,7 +52,7 @@ fun all_except_option(target: string, lst: string list) =
          | x :: xs => 
              if same_string(x, target) 
                then SOME xs 
-             else SOME (x :: valOf (all_except_option(target, xs)))
+             else SOME (x :: my_valOf (all_except_option(target, xs)))
   end
 
 
