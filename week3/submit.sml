@@ -63,14 +63,11 @@ fun get_substitutions1 (lst: string list list, s: string) =
   *)
 
   case lst of
-    [] => [] 
-     | x :: xs => let 
-                    val x_aeo = all_except_option(s, x)
-                  in 
-                    if isSome x_aeo
-                    then valOf(x_aeo) @ get_substitutions1(xs, s)
-                    else get_substitutions1(xs, s)
-                  end
+       [] => [] 
+     | x :: xs => 
+          case all_except_option(s, x) of
+                 NONE => get_substitutions1(xs, s)
+               | SOME i => i @ get_substitutions1(xs, s)
 
 
 fun get_substitutions2 (lst: string list list, s: string) = 
@@ -83,12 +80,10 @@ fun get_substitutions2 (lst: string list list, s: string) =
   let fun append(ss: string list list, acc: string list) = 
     case ss of
          [] => acc
-         | x :: xs => let val x_aeo = all_except_option(s, x)
-                    in
-                      if isSome(x_aeo)
-                        then append(xs, acc @ valOf(x_aeo))
-                      else append(xs, acc)
-                    end 
+       | x :: xs => 
+            case all_except_option(s, x) of
+                 NONE => append(xs, acc)
+               | SOME i => append(xs, acc @ i )
   in
     append(lst, [])
   end
