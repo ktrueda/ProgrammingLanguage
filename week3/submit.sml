@@ -177,8 +177,87 @@ fun all_same_color (cs: card list) =
     all_same_color_(tl cs, card_color(hd cs))
   end
 
+fun sum_cards (cs: card list) = 
+(*
+ * Write a function sum_cards, which takes a list of cards and returns the sum of
+ * their values. Use a locally
+ * defined helper function that is tail recursive. (Take “calls use a
+ * constant amount of stack space” as a
+ * requirement for this problem.)
+ *)
+  let fun sum(cs_: card list, acc: int) = 
+    if null cs_
+    then acc
+    else sum(tl cs_, acc + card_value(hd cs_))
+  in
+    sum(cs, 0)
+  end
+
+fun score (cs: card list, goal: int) = 
+(*
+ * Write a function score, which takes a card list (the held-cards) and an int
+ * (the goal) and computes the score as described above.
+ *
+ * The objective is to end the game with a low score (0 is best). Scoring works
+ * as follows: Let sum be the sum
+ * of the values of the held-cards. If sum is greater than goal, the preliminary
+ * score is three times (sum−goal),
+ * else the preliminary score is (goal − sum). The score is the preliminary
+ * score unless all the held-cards are
+ * the same color, in which case the score is the preliminary score divided by 2
+ * (and rounded down as usual
+ * with integer division; use ML’s div operator).
+ *)
+  let
+   val sum = sum_cards(cs)
+   val is_same_color = all_same_color(cs)
+   val denominator = if is_same_color then 2 else 1
+  in
+    if sum > goal 
+    then 3 * (sum - goal) div denominator
+    else (goal - sum) div denominator
+  end
+
+fun officiate(cs: card list, ms: move list, goal: int) = 
+(*
+* Write a function officiate, which “runs a game.” It takes a card list (the
+* card-list) a move list
+* (what the player “does” at each point), and an int (the goal) and returns the
+* score at the end of the
+* game after processing (some or all of) the moves in the move list in order.
+* Use a locally defined recursive
+* helper function that takes several arguments that together represent the
+* current state of the game. As
+* described above:
+* • The game starts with the held-cards being the empty list.
+* • The game ends if there are no more moves. (The player chose to stop since
+* the move list is empty.)
+* • If the player discards some card c, play continues (i.e., make a recursive
+* call) with the held-cards
+* not having c and the card-list unchanged. If c is not in the held-cards, raise
+* the IllegalMove
+* exception.
+* • If the player draws and the card-list is (already) empty, the game is over.
+* Else if drawing causes
+* the sum of the held-cards to exceed the goal, the game is over (after
+* drawing). Else play continues
+* with a larger held-cards and a smaller card-list.
+* Sample solution for (g) is under 20 lines.
+*)
+  let
+    fun held_cards (cs_: card list, ms_: move list, curr: card list) = 
+      if null ms_ orelse null cs_
+      then curr
+      else case (hd ms_) of
+             Draw => held_cards(tl cs_, tl ms_, hd cs_ :: curr)
+            | Discard(c) => held_cards(cs_, tl ms_, remove_card(curr, c, IllegalMove))
+  in
+    score(held_cards(cs, ms, []), goal)
+  end
+  
 
 
+ 
 
 
   
