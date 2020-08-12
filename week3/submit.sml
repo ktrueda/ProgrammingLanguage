@@ -31,12 +31,10 @@ fun all_except_option(target: string, lst: string list) =
   * same_string, provided to you,
   * to compare strings. Sample solution is around 8 lines
   *)
-  let fun is_include(ss: string list) = 
-      if null ss
-      then false
-      else if (hd ss) = target
-      then true
-      else is_include(tl ss)
+  let fun is_include ss = 
+    case ss of
+         [] => false
+       | x :: xs => if x = target then true else is_include(xs)
     fun my_valOf v = 
       case v of
            NONE => []
@@ -46,7 +44,6 @@ fun all_except_option(target: string, lst: string list) =
     then NONE
     else
       case lst of
-        (* I can't understand how to write logic without valOf *) 
         [] => NONE
          | x :: [] => SOME []
          | x :: xs => 
@@ -81,15 +78,15 @@ fun get_substitutions2 (lst: string list list, s: string) =
   * local helper function.
   *)
   (* I can't understand if this function is tail recursive *) 
-  let fun append(ss: string list list, acc: string list) = 
+  let fun substitute (ss, acc) = 
     case ss of
          [] => acc
        | x :: xs => 
             case all_except_option(s, x) of
-                 NONE => append(xs, acc)
-               | SOME i => append(xs, acc @ i )
+                 NONE => substitute(xs, acc)
+               | SOME i => substitute(xs, acc @ i )
   in
-    append(lst, [])
+    substitute(lst, [])
   end
 
 
@@ -106,18 +103,19 @@ fun similar_names (ss: string list list, fullname: {first: string, middle:string
    * or (c). The answer should begin with the original name (then have 0
    * or more other names). Example:
    *)
-   let
-     val sbt_first = get_substitutions2(ss, #first fullname)
-     fun apply (sbt_f) = 
-       case sbt_f of
-            [] => []
-          | x :: xs => {first= x, middle= (#middle fullname), last= (#last fullname)} :: apply(xs)
-   in
-     fullname :: apply(sbt_first)
-   end
+  let
+    val first_name = case fullname of {first, middle, last} => first
+    val sbt_first = get_substitutions2(ss, first_name)
+    fun apply x = case fullname of {first, middle, last} => {first= x, middle=middle, last=last}
+    fun apply_all (sbt_f) = 
+      case sbt_f of
+           [] => []
+         | x :: xs => apply(x) :: apply_all(xs)
+  in
+    fullname :: apply_all(sbt_first)
+  end
 
-
-fun card_eq(x: card, y: card) = (#1 x) = (#1 y) andalso (#2 x) = (#2 y)
+fun card_eq(x: card, y: card) = x = y
 
 
 fun card_color (c: card) = 
@@ -125,11 +123,15 @@ fun card_color (c: card) =
   * (spades and clubs are black,
   * diamonds and hearts are red). Note: One case-expression is enough.
   *)
-  case (#1 c) of 
-       Clubs => Black
-     | Diamonds => Red
-     | Spades => Black
-     | Hearts => Red
+  let 
+    val suit_value = case c of (suit, rank) => suit 
+  in
+    case suit_value of 
+         Clubs => Black
+       | Diamonds => Red
+       | Spades => Black
+       | Hearts => Red
+  end
 
 fun card_value(c: card) = 
   (*
@@ -138,12 +140,16 @@ fun card_value(c: card) =
   * number as the value, aces are 11, everything else is 10). Note: One
   * case-expression is enough.
   *)
-  case (#2 c) of
-       King => 10
-     | Queen => 10
-     | Jack => 10
-     | Ace => 11
-     | Num(i) => i
+  let
+    val rank_value = case c of (suit, rank) => rank
+  in
+    case rank_value of
+         King => 10
+       | Queen => 10
+       | Jack => 10
+       | Ace => 11
+       | Num(i) => i
+  end
 
 fun remove_card (cs: card list, c :card, e: exn) = 
   (*
