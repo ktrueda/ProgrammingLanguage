@@ -173,15 +173,13 @@ fun all_same_color (cs: card list) =
   *)
   let 
     fun all_same_color_(cs_: card list, c:color) = 
-      if null cs_
-      then true
-      else if card_color(hd cs_) = c 
-      then all_same_color_(tl cs_, c)
-      else false
+      case cs_ of 
+          [] => true
+         | x :: xs => if card_color(x) = c then all_same_color_(xs, c) else false
   in
-    if null cs
-    then false
-    else all_same_color_(tl cs, card_color(hd cs))
+    case cs of
+         [] => false
+       | x :: xs => all_same_color_(xs, card_color(x))
   end
 
 fun sum_cards (cs: card list) = 
@@ -193,9 +191,9 @@ fun sum_cards (cs: card list) =
  * requirement for this problem.)
  *)
   let fun sum(cs_: card list, acc: int) = 
-    if null cs_
-    then acc
-    else sum(tl cs_, acc + card_value(hd cs_))
+    case cs_ of 
+         [] => acc
+       | x :: xs => sum(xs, acc + card_value(x))
   in
     sum(cs, 0)
   end
