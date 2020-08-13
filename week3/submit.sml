@@ -31,26 +31,13 @@ fun all_except_option(target: string, lst: string list) =
   * same_string, provided to you,
   * to compare strings. Sample solution is around 8 lines
   *)
-  let fun is_include ss = 
-    case ss of
-         [] => false
-       | x :: xs => if x = target then true else is_include(xs)
-    fun my_valOf v = 
-      case v of
-           NONE => []
-         | SOME i => i 
-  in
-    if not (is_include(lst))
-    then NONE
-    else
-      case lst of
-        [] => NONE
-         | x :: [] => SOME []
-         | x :: xs => 
-             if same_string(x, target) 
-               then SOME xs 
-             else SOME (x :: my_valOf (all_except_option(target, xs)))
-  end
+  case lst of 
+       [] => NONE
+     | x :: xs => if same_string(target, x)
+                  then SOME xs
+                  else case all_except_option(target, xs) of
+                            NONE => NONE
+                          | SOME i => SOME(x :: i)
 
 
 fun get_substitutions1 (lst: string list list, s: string) = 
@@ -123,15 +110,11 @@ fun card_color (c: card) =
   * (spades and clubs are black,
   * diamonds and hearts are red). Note: One case-expression is enough.
   *)
-  let 
-    val suit_value = case c of (suit, rank) => suit 
-  in
-    case suit_value of 
-         Clubs => Black
-       | Diamonds => Red
-       | Spades => Black
-       | Hearts => Red
-  end
+  case c of 
+       (Clubs, _) => Black
+     | (Diamonds, _) => Red
+     | (Spades, _) => Black
+     | (Hearts, _) => Red
 
 fun card_value(c: card) = 
   (*
@@ -140,16 +123,12 @@ fun card_value(c: card) =
   * number as the value, aces are 11, everything else is 10). Note: One
   * case-expression is enough.
   *)
-  let
-    val rank_value = case c of (suit, rank) => rank
-  in
-    case rank_value of
-         King => 10
-       | Queen => 10
-       | Jack => 10
-       | Ace => 11
-       | Num(i) => i
-  end
+  case c of
+       (_, King) => 10
+     | (_, Queen) => 10
+     | (_, Jack) => 10
+     | (_, Ace) => 11
+     | (_, Num(i)) => i
 
 fun remove_card (cs: card list, c :card, e: exn) = 
   (*
