@@ -44,7 +44,7 @@ val test_remove_card_4 = remove_card ([(Hearts, Ace),(Hearts, Ace)], (Hearts, Ac
 
 val test_all_same_color_1 = all_same_color [(Hearts, Ace), (Hearts, Ace)] = true
 val test_all_same_color_2 = all_same_color [(Hearts, Ace), (Clubs, Ace)] = false
-val test_all_same_color_3 = all_same_color [] = false
+val test_all_same_color_3 = all_same_color [] = true
 
 val test_sum_cards_1 = sum_cards [(Clubs, Num 2),(Clubs, Num 2)] = 4
 val test_sum_cards_2 = sum_cards [(Clubs, Num 2),(Clubs, Num 3)] = 5
@@ -53,7 +53,7 @@ val test_score_1 = score ([(Hearts, Num 2),(Clubs, Num 4)],10) = 4
 val test_score_2 = score ([(Hearts, Num 8),(Clubs, Num 4)],10) = 6
 val test_score_3 = score ([(Hearts, Num 2),(Diamonds, Num 4)],10) = 2
 val test_score_4 = score ([(Hearts, Num 8),(Diamonds, Num 4)],10) = 3
-val test_score_5 = score ([],10) = 10
+val test_score_5 = score ([],10) = 5
 
 val test_officiate_1 = officiate ([(Hearts, Num 2),(Clubs, Num 4)],[Draw], 15) = 6
 
@@ -68,6 +68,6 @@ val test_officiate_3 = ((officiate([(Clubs,Jack),(Spades,Num(8))],
                false) 
               handle IllegalMove => true)
              
-val test_officiate_4 = officiate ([(Hearts, Num 2),(Clubs, Num 4)],[], 15) = 15
+val test_officiate_4 = officiate ([(Hearts, Num 2),(Clubs, Num 4)],[], 15) = 7
 val test_officiate_5 = officiate ([(Hearts, Num 8),(Clubs, Num 7),(Clubs, Num 3)],[Draw, Draw,Draw], 10) = 15
-val test_officiate_6 = officiate ([],[Draw, Draw], 10) = 10
+val test_officiate_6 = officiate ([],[Draw, Draw], 10) = 5

@@ -178,7 +178,7 @@ fun all_same_color (cs: card list) =
          | x :: xs => if card_color(x) = c then all_same_color_(xs, c) else false
   in
     case cs of
-         [] => false
+         [] => true
        | x :: xs => all_same_color_(xs, card_color(x))
   end
 
