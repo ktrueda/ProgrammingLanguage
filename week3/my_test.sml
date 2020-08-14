@@ -69,5 +69,5 @@ val test_officiate_3 = ((officiate([(Clubs,Jack),(Spades,Num(8))],
               handle IllegalMove => true)
              
 val test_officiate_4 = officiate ([(Hearts, Num 2),(Clubs, Num 4)],[], 15) = 7
-val test_officiate_5 = officiate ([(Hearts, Num 8),(Clubs, Num 7),(Clubs, Num 3)],[Draw, Draw,Draw], 10) = 15
+val test_officiate_5 = officiate ([(Hearts, Num 8),(Clubs, Num 7),(Clubs, Num 3)],[Draw, Draw,Draw], 10) = 24
 val test_officiate_6 = officiate ([],[Draw, Draw], 10) = 5

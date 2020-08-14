@@ -230,13 +230,12 @@ fun officiate(cs: card list, ms: move list, goal: int) =
 *)
   let
     fun held_cards (cs_: card list, ms_: move list, curr: card list) = 
-      if null ms_ orelse null cs_
-      then curr
-      else if sum_cards(curr) > goal
-      then curr
-      else case (hd ms_) of
-             Draw => held_cards(tl cs_, tl ms_, hd cs_ :: curr)
-            | Discard(c) => held_cards(cs_, tl ms_, remove_card(curr, c, IllegalMove))
+      case (ms_, cs_) of
+           ([], _) => curr
+         | (_, []) => curr
+         | (hd_ms_::tl_ms_, hd_cs_::tl_cs_) => case (hd_ms_) of
+             Draw => held_cards(tl_cs_, tl_ms_, hd_cs_ :: curr)
+            | Discard(c) => held_cards(cs_, tl_ms_, remove_card(curr, c, IllegalMove))
   in
     score(held_cards(cs, ms, []), goal)
   end
