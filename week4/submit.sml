@@ -154,5 +154,86 @@ in
   else SOME (summarize filtered [])
 end
 
+fun count_wildcards p = 
+(*
+* Use g to define a function count_wildcards that takes a pattern and returns
+* how many Wildcard patterns it contains.
+*)
+case p of
+     Wildcard => 1
+   | Variable i => 0
+   | UnitP => 0
+   | ConstP i => 0
+   | TupleP is => foldl (fn (x,y) => x+y) 0 (map count_wildcards is)
+   | ConstructorP (c, i)=> count_wildcards i  
+
+
+fun count_wild_and_variable_lengths p = 
+(* 
+* Use g to define a function count_wild_and_variable_lengths that takes a
+* pattern and returns the number of Wildcard patterns it contains plus the
+* sum of the string lengths of all the variables in the variable patterns 
+* it contains. (Use String.size. We care only about variable names; the
+* constructor names are not relevant.)
+*)
+case p of
+     Wildcard => 1
+   | Variable i => String.size(i)
+   | UnitP => 0
+   | ConstP i => 0
+   | TupleP is => foldl (fn (x,y) => x+y) 0 (map count_wild_and_variable_lengths is)
+   | ConstructorP (c, i)=> count_wild_and_variable_lengths i  
+
+fun count_some_var (s, p) = 
+(*
+* Use g to define a function count_some_var that takes a string and a pattern
+* (as a pair) and returns the number of times the string appears as a variable
+* in the pattern.  We care only about variable names; the constructor names are not relevant.
+*)
+case p of
+     Wildcard => 0
+   | Variable i => if i = s then 1 else 0
+   | UnitP => 0
+   | ConstP i => 0
+   | TupleP is => foldl (fn (x,y) => count_some_var(s, x) + y) 0 is
+   | ConstructorP (c, i)=> count_some_var(s, i) 
+
+
+fun check_pat p = 
+(*
+* Write a function check_pat that takes a pattern and returns true if and
+* only if all the variables
+* appearing in the pattern are distinct from each other (i.e., use different
+* strings). The constructor
+* names are not relevant. Hints: The sample solution uses two helper
+* functions. The first takes a
+* pattern and returns a list of all the strings it uses for variables. Using
+* foldl with a function that uses
+* @ is useful in one case. The second takes a list of strings and decides if
+* it has repeats. List.exists may
+* be useful. Sample solution is 15 lines. These are hints: We are not
+* requiring foldl and List.exists
+* here, but they make it easier.
+ *)
+ true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

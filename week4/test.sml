@@ -39,13 +39,30 @@ val test_all_answers_1 = all_answers (fn x => if x = 1 then SOME [x] else NONE) 
 val test_all_answers_2 = all_answers (fn x => if x = 1 then SOME [x, x+1] else NONE) [1] = SOME [1, 2]
 val test_all_answers_3 = all_answers (fn x => if (x mod 2) = 0 then SOME [x, x+1] else NONE) [0, 1, 2] = SOME [2,3,0,1]
 
+val test_count_wildcards_1 = count_wildcards Wildcard = 1
+val test_count_wildcards_2 = count_wildcards (Variable("foo")) = 0
+val test_count_wildcards_3 = count_wildcards UnitP = 0
+val test_count_wildcards_4 = count_wildcards (ConstP(1)) = 0
+val test_count_wildcards_5 = count_wildcards (TupleP([Wildcard])) = 1
+val test_count_wildcards_6 = count_wildcards (ConstructorP("bar", Wildcard)) = 1
+val test_count_wildcards_7 = count_wildcards (TupleP([Wildcard, Wildcard])) = 2
+val test_count_wildcards_8 = count_wildcards (ConstructorP("bar", UnitP)) = 0
+
+val test_count_wild_and_variable_length_1 = count_wild_and_variable_lengths Wildcard = 1
+val test_count_wild_and_variable_length_2 = count_wild_and_variable_lengths (Variable("foo")) = 3
+val test_count_wild_and_variable_length_3 = count_wild_and_variable_lengths UnitP = 0
+val test_count_wild_and_variable_length_4 = count_wild_and_variable_lengths (ConstP(1)) = 0
+val test_count_wild_and_variable_length_5 = count_wild_and_variable_lengths (TupleP([Wildcard])) = 1
+val test_count_wild_and_variable_length_6 = count_wild_and_variable_lengths (ConstructorP("bar", Wildcard)) = 1
+val test_count_wild_and_variable_length_7 = count_wild_and_variable_lengths (TupleP([Variable("foo"), Variable("bar")])) = 6
+val test_count_wild_and_variable_length_8 = count_wild_and_variable_lengths (ConstructorP("bar", UnitP)) = 0
+
+val test_count_some_var_1 = count_some_var ("x", Variable("x")) = 1
+val test_count_some_var_2 = count_some_var ("x", Variable("y")) = 0
+val test_count_some_var_3 = count_some_var ("x", Wildcard) = 0
+val test_count_some_var_4 = count_some_var ("x", TupleP([Variable("x"), Variable("y")])) = 1
+
 (*
-val test9a = count_wildcards Wildcard = 1
-
-val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
-
-val test9c = count_some_var ("x", Variable("x")) = 1
-
 val test10 = check_pat (Variable("x")) = true
 
 val test11 = match (Const(1), UnitP) = NONE
