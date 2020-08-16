@@ -233,7 +233,7 @@ in
 end
 
 
-fun match (v:valu, p:pattern) =
+fun match (v, p) =
 (*
 * Write a function match that takes a valu * pattern and returns a (string *
 * valu) list option,
@@ -250,7 +250,7 @@ fun match (v:valu, p:pattern) =
 * not requiring all_answers and ListPair.zip here, but they make it easier.
 *)
 let
-  fun zip(lst1: valu list, lst2: pattern list) = 
+  fun zip(lst1, lst2) = 
     case (lst1, lst2) of
       ([], []) => []
     | (lst1_hd::lst1_tl, lst2_hd::lst2_tl) => (lst1_hd, lst2_hd) :: zip(lst1_tl, lst2_tl)
@@ -261,15 +261,11 @@ in
   | UnitP => ( 
     case v of 
       Unit => SOME []
-    | Const v=> NONE
-    | Tuple v => NONE
-    | Constructor v => NONE)
+    | _ => NONE)
   | ConstP(i) => (
     case v of 
-      Unit => SOME []
-    | Const j => if i = j then SOME [] else NONE
-    | Tuple v => NONE
-    | Constructor v => NONE )
+      Const j => if i = j then SOME [] else NONE
+    | _ => NONE )
   | TupleP is => (
     case v of 
       Tuple js => 
