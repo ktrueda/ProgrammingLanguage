@@ -122,10 +122,10 @@ fun first_answer f lst =
 * NoAnswer. Hints: Sample solution is 5 lines and does nothing fancy.
 *)
 case lst of
-     [] => raise NoAnswer
-   | x :: xs => case (f x ) of
-                     NONE => first_answer f xs
-                   | SOME i => i
+  [] => raise NoAnswer
+| x :: xs => case (f x) of
+              NONE => first_answer f xs
+            | SOME i => i
 
 
 fun all_answers f lst =

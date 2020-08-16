@@ -6,6 +6,7 @@
 val test_only_capitals_1 = only_capitals ["A","B","C"] = ["A","B","C"]
 val test_only_capitals_2 = only_capitals ["A","b","c"] = ["A"]
 val test_only_capitals_3 = only_capitals [] = []
+val test_only_capitals_4 = only_capitals ["a","b","c"] = []
 
 val test_longest_string1_1 = longest_string1 ["A","bc","C"] = "bc"
 val test_longest_string1_2 = longest_string1 [] = ""
@@ -29,6 +30,7 @@ val test_longest_capitalized_3 = longest_capitalized [] = ""
 
 val test_rev_string_1 = rev_string "abc" = "cba"
 val test_rev_string_2 = rev_string "" = ""
+val test_rev_string_3 = rev_string "ab" = "ba"
 
 val test_first_answer_1 = first_answer (fn x => if x > 3 then SOME x else NONE) [1,2,3,4,5] = 4
 val test_first_answer_2 = first_answer (fn x => if (x mod 2) = 0 then SOME x else NONE) [1,2,3,4,5] = 2
