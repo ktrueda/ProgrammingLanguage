@@ -82,7 +82,10 @@ val test_match_constructor_2 = match (Constructor("foo", Const(1)), ConstructorP
 val test_match_constructor_3 = match (Constructor("foo", Const(1)), ConstructorP("foo", Variable("bar"))) = SOME [("bar", Const(1))]
 
 
-(*
-val test12 = first_match Unit [UnitP] = SOME []
+val test_first_match_1 = first_match Unit [UnitP] = SOME []
+val test_first_match_2 = first_match Unit [] = NONE
+val test_first_match_3 = first_match Unit [UnitP, Wildcard] = SOME []
+val test_first_match_4 = first_match Unit [Wildcard, UnitP] = SOME []
+val test_first_match_5 = first_match Unit [Variable("foo")] = SOME [("foo", Unit)]
+val test_first_match_6 = first_match Unit [Wildcard, Variable("foo")] = SOME []
 
-*)

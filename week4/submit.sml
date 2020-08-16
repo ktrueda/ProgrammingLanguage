@@ -282,8 +282,20 @@ in
     | _ => NONE)
 end
 
-
-
+fun first_match v ps = 
+(*
+ * Write a function first_match that takes a value and a list of patterns and returns a
+ * (string * valu) list option, namely NONE if no pattern in the list matches or SOME lst where
+ * lst is the list of bindings for the first pattern in the list that matches. Use first_answer and a
+ * handle-expression. Hints: Sample solution is 3 lines.
+ *)
+let
+  val matches = map (fn p => match(v, p)) ps
+in
+  (
+    SOME( first_answer (fn x => x) matches) 
+  ) handle NoAnswer => NONE
+end
 
 
 
