@@ -7,6 +7,6 @@
 	"settings": {
 		"code-runner.executorMap": {
 			"sml": "docker run -it --rm -v $HOME/GoogleDrive/coursera/ProgrammingLanguagePartA:/app --entrypoint sml ktrueda/smlnj:latest /app/week4/submit.sml /app/week4/test.sml"
-		}
+		},
 	}
 }

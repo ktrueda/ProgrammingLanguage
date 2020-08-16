@@ -62,11 +62,27 @@ val test_count_some_var_2 = count_some_var ("x", Variable("y")) = 0
 val test_count_some_var_3 = count_some_var ("x", Wildcard) = 0
 val test_count_some_var_4 = count_some_var ("x", TupleP([Variable("x"), Variable("y")])) = 1
 
+val test_check_pat_1 = check_pat (Variable("x")) = true
+val test_check_pat_2 = check_pat (TupleP([Variable("x"), Variable("x")])) = false
+val test_check_pat_3 = check_pat (Wildcard) = true
+
+
+val test_match_wildcard_1 = match (Const(1), Wildcard) = SOME []
+val test_match_variable_1 = match (Const(1), Variable("foo")) = SOME [("foo", Const(1))]
+val test_match_unitp_1 = match (Unit, UnitP) = SOME []
+val test_match_unitp_2 = match (Const(1), UnitP) = NONE
+val test_match_unitp_3 = match (Tuple([Const(1)]), UnitP) = NONE
+val test_match_constp_1 = match (Const(17), ConstP(17)) = SOME []
+val test_match_constp_2 = match (Const(18), ConstP(17)) = NONE 
+val test_match_tuplep_1 = match (Const(18), TupleP([ConstP(1), ConstP(2)])) = NONE 
+val test_match_tuplep_2 = match (Tuple([Const(1), Const(2)]), TupleP([ConstP(1), ConstP(2)])) = SOME []
+val test_match_tuplep_3 = match (Tuple([Const(1), Const(2)]), TupleP([Variable("foo"), ConstP(2)])) = SOME [("foo", Const(1))]
+val test_match_constructor_1 = match (Constructor("bar", Const(1)), ConstructorP("foo", ConstP(1))) = NONE
+val test_match_constructor_2 = match (Constructor("foo", Const(1)), ConstructorP("foo", ConstP(1))) = SOME []
+val test_match_constructor_3 = match (Constructor("foo", Const(1)), ConstructorP("foo", Variable("bar"))) = SOME [("bar", Const(1))]
+
+
 (*
-val test10 = check_pat (Variable("x")) = true
-
-val test11 = match (Const(1), UnitP) = NONE
-
 val test12 = first_match Unit [UnitP] = SOME []
 
 *)

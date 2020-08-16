@@ -214,8 +214,79 @@ fun check_pat p =
 * be useful. Sample solution is 15 lines. These are hints: We are not
 * requiring foldl and List.exists
 * here, but they make it easier.
- *)
- true
+*)
+let 
+  fun serialize p = 
+    case p of
+       Wildcard => []
+     | Variable i => [i]
+     | UnitP => []
+     | ConstP i => []
+     | TupleP is => foldl (fn (x,y) => serialize(x) @ y) [] is
+     | ConstructorP (c, i)=> serialize i
+  fun has_repeat lst = 
+    case lst of
+         [] => false
+       | x :: xs => if List.exists (fn y => y = x) xs then true else has_repeat xs
+in
+  not(has_repeat(serialize p))
+end
+
+
+fun match (v:valu, p:pattern) =
+(*
+* Write a function match that takes a valu * pattern and returns a (string *
+* valu) list option,
+* namely NONE if the pattern does not match and SOME lst where lst is the list
+* of bindings if it does.
+* Note that if the value matches but the pattern has no patterns of the form
+* Variable s, then the result
+* is SOME []. Hints: Sample solution has one case expression with 7 branches.
+* The branch for tuples
+* uses all_answers and ListPair.zip. Sample solution is 13 lines. Remember to
+* look above for the
+* rules for what patterns match what values, and what bindings they produce.
+* These are hints: We are
+* not requiring all_answers and ListPair.zip here, but they make it easier.
+*)
+let
+  fun zip(lst1: valu list, lst2: pattern list) = 
+    case (lst1, lst2) of
+      ([], []) => []
+    | (lst1_hd::lst1_tl, lst2_hd::lst2_tl) => (lst1_hd, lst2_hd) :: zip(lst1_tl, lst2_tl)
+in
+  case p of 
+    Wildcard => SOME []
+  | Variable i => SOME [(i, v)]
+  | UnitP => ( 
+    case v of 
+      Unit => SOME []
+    | Const v=> NONE
+    | Tuple v => NONE
+    | Constructor v => NONE)
+  | ConstP(i) => (
+    case v of 
+      Unit => SOME []
+    | Const j => if i = j then SOME [] else NONE
+    | Tuple v => NONE
+    | Constructor v => NONE )
+  | TupleP is => (
+    case v of 
+      Tuple js => 
+        let
+          val vps : (valu * pattern) list = zip(js, is)
+          val somenone_lst: (string * valu) list option list = map (fn (x, y) => match(x, y)) vps
+        in
+          all_answers (fn i => i) somenone_lst
+        end
+    | _ => NONE)
+  | ConstructorP (c, i) => ( 
+    case v of 
+      Constructor (cn, j) => if c = cn then match(j, i) else NONE
+    | _ => NONE)
+end
+
+
 
 
 
