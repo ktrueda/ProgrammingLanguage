@@ -40,6 +40,7 @@ val test_first_answer_3 = ((first_answer (fn x => if x > 300 then SOME x else NO
 val test_all_answers_1 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
 val test_all_answers_2 = all_answers (fn x => if x = 1 then SOME [x, x+1] else NONE) [1] = SOME [1, 2]
 val test_all_answers_3 = all_answers (fn x => if (x mod 2) = 0 then SOME [x, x+1] else NONE) [0, 1, 2] = SOME [2,3,0,1]
+val test_all_answers_4 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [] = SOME[]
 
 val test_count_wildcards_1 = count_wildcards Wildcard = 1
 val test_count_wildcards_2 = count_wildcards (Variable("foo")) = 0
@@ -82,7 +83,7 @@ val test_match_tuplep_3 = match (Tuple([Const(1), Const(2)]), TupleP([Variable("
 val test_match_constructor_1 = match (Constructor("bar", Const(1)), ConstructorP("foo", ConstP(1))) = NONE
 val test_match_constructor_2 = match (Constructor("foo", Const(1)), ConstructorP("foo", ConstP(1))) = SOME []
 val test_match_constructor_3 = match (Constructor("foo", Const(1)), ConstructorP("foo", Variable("bar"))) = SOME [("bar", Const(1))]
-
+val test_match_complex_1 = match (Tuple[Const(17),Unit,Const(4),Constructor ("egg",Const(4)),Constructor ("egg",Constructor ("egg",Const 4))],TupleP[Wildcard,Wildcard]) = NONE
 
 val test_first_match_1 = first_match Unit [UnitP] = SOME []
 val test_first_match_2 = first_match Unit [] = NONE
@@ -90,4 +91,99 @@ val test_first_match_3 = first_match Unit [UnitP, Wildcard] = SOME []
 val test_first_match_4 = first_match Unit [Wildcard, UnitP] = SOME []
 val test_first_match_5 = first_match Unit [Variable("foo")] = SOME [("foo", Unit)]
 val test_first_match_6 = first_match Unit [Wildcard, Variable("foo")] = SOME []
-
+val test_first_match_7 = first_match (Tuple[
+  Const 17,
+  Unit,
+  Const 4,
+  Constructor ("egg",Const 4),
+  Constructor ("egg",
+    Constructor ("egg",Const 4)),
+  Tuple[
+    Const 17,
+    Unit,
+    Const 4,
+    Constructor ("egg",
+      Const 4),
+    Constructor ("egg",
+      Constructor ("egg",
+        Const 4))
+  ],
+  Tuple[
+    Unit,
+    Unit
+  ],
+  Tuple[
+    Const 17,
+    Const 4
+  ],
+  Tuple[
+    Constructor("egg",
+      Const 4),
+    Constructor("egg",
+      Const 4)
+  ]
+]) ([
+  ConstP 17,
+  ConstP 4,
+  ConstructorP ("egg",
+    ConstP 4),
+  ConstructorP ("egg",
+    ConstructorP ("egg",
+      ConstP 4)),
+  TupleP[
+    ConstP 17,
+    Wildcard,
+    ConstP 4,
+    ConstructorP ("egg",
+      ConstP 4),
+    ConstructorP ("egg",
+      ConstructorP ("egg",
+        ConstP 4))
+  ],
+  TupleP[
+    Wildcard,
+    Wildcard
+  ],
+  TupleP[
+    ConstP 17,
+    ConstP 4],
+  TupleP[
+    ConstructorP ("egg",
+      ConstP 4),
+    ConstructorP ("egg",
+      ConstP 4)
+  ],
+  TupleP[
+    ConstP 17,
+    Wildcard,
+    ConstP 4,
+    ConstructorP ("egg",
+      ConstP 4),
+    ConstructorP ("egg",
+      ConstructorP ("egg",
+        ConstP 4)),
+    TupleP[
+      ConstP 17,
+      Wildcard,
+      ConstP 4,
+      ConstructorP ("egg",
+        ConstP 4),
+      ConstructorP ("egg",
+        ConstructorP ("egg",
+          ConstP 4))
+    ],
+    TupleP[
+      Wildcard,
+      Wildcard
+    ],
+    TupleP[
+      ConstP 17,
+      ConstP 4],
+    TupleP[
+      ConstructorP ("egg",
+        ConstP 4),
+      ConstructorP ("egg",
+        ConstP 4)
+    ]
+  ]
+]) = SOME []

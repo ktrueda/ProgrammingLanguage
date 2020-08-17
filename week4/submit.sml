@@ -149,7 +149,9 @@ let
          [] => acc
        | x :: xs => summarize xs ((valOf x) @ acc)
 in
-  if List.length(filtered) = 0
+  if List.length(lst) = 0
+  then SOME []
+  else if List.length(filtered) = 0
   then NONE
   else SOME (summarize filtered [])
 end
@@ -269,12 +271,15 @@ in
   | TupleP is => (
     case v of 
       Tuple js => 
-        let
-          val vps : (valu * pattern) list = zip(js, is)
-          val somenone_lst: (string * valu) list option list = map (fn (x, y) => match(x, y)) vps
-        in
-          all_answers (fn i => i) somenone_lst
-        end
+        if List.length js = List.length is 
+        then 
+          let
+            val vps : (valu * pattern) list = zip(js, is)
+            val somenone_lst: (string * valu) list option list = map (fn (x, y) => match(x, y)) vps
+          in
+            all_answers (fn i => i) somenone_lst
+          end
+        else NONE
     | _ => NONE)
   | ConstructorP (c, i) => ( 
     case v of 
