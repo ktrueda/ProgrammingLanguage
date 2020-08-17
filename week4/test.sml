@@ -39,8 +39,9 @@ val test_first_answer_3 = ((first_answer (fn x => if x > 300 then SOME x else NO
 
 val test_all_answers_1 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
 val test_all_answers_2 = all_answers (fn x => if x = 1 then SOME [x, x+1] else NONE) [1] = SOME [1, 2]
-val test_all_answers_3 = all_answers (fn x => if (x mod 2) = 0 then SOME [x, x+1] else NONE) [0, 1, 2] = SOME [2,3,0,1]
+val test_all_answers_3 = all_answers (fn x => if (x mod 2) = 0 then SOME [x, x+1] else NONE) [0, 1, 2] = NONE
 val test_all_answers_4 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [] = SOME[]
+val test_all_answers_5 = all_answers (fn x => NONE) [] = SOME[]
 
 val test_count_wildcards_1 = count_wildcards Wildcard = 1
 val test_count_wildcards_2 = count_wildcards (Variable("foo")) = 0

@@ -151,9 +151,9 @@ let
 in
   if List.length(lst) = 0
   then SOME []
-  else if List.length(filtered) = 0
-  then NONE
-  else SOME (summarize filtered [])
+  else if List.length(filtered) = List.length(lst)
+  then SOME (summarize filtered [])
+  else NONE
 end
 
 fun count_wildcards p = 
