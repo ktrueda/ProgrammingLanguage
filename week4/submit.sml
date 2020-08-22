@@ -36,7 +36,7 @@ datatype typ = Anything
 
 (**** you can put all your code here ****)
 
-fun only_capitals lst = 
+val only_capitals = 
 (*
 * Write a function only_capitals that takes a string list and returns a string
 * list that has only
@@ -45,10 +45,10 @@ fun only_capitals lst =
 * character. Use List.filter, Char.isUpper, and String.sub to make a 1-2 line
 * solution.
 *)
-  List.filter (fn s => Char.isUpper(String.sub(s, 0))) lst
+  List.filter (fn s => Char.isUpper(String.sub(s, 0)))
 
 
-fun longest_string1 lst = 
+val longest_string1 = 
 (*
 * Write a function longest_string1 that takes a string list and returns the
 * longest string in the
@@ -57,18 +57,18 @@ fun longest_string1 lst =
 * list. Use foldl, String.size, and no recursion (other than the implementation
 * of foldl is recursive).
 *)
-foldl (fn (x,curr) => if (String.size x) > (String.size curr) then x else curr) "" lst
+foldl (fn (x,curr) => if (String.size x) > (String.size curr) then x else curr) ""
 
-fun longest_string2 lst = 
+val longest_string2 = 
 (*
 * Write a function longest_string2 that is exactly like longest_string1 except
 * in the case of ties it returns the string closest to the end of the list. 
 * Your solution should be almost an exact copy of
 * longest_string1. Still use foldl and String.size.
 *)
-foldl (fn (x,curr) => if (String.size x) >= (String.size curr) then x else curr) "" lst
+foldl (fn (x,curr) => if (String.size x) >= (String.size curr) then x else curr) ""
 
-fun longest_string_helper f lst = 
+fun longest_string_helper f = 
 (*
 * longest_string_helper
 * longest_string_helper has type (int * int -> bool) -> string list -> string
@@ -80,7 +80,7 @@ fun longest_string_helper f lst =
 * then the function returned has the same
 * behavior as longest_string1.
 *)
-foldl (fn (x,curr) => if f(x, curr) then x else curr) "" lst
+foldl (fn (x,curr) => if f(x, curr) then x else curr) ""
 
 
 (* longest_string3 has the same behavior as longest_string1 *)
