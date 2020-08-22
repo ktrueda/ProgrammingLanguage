@@ -141,20 +141,17 @@ fun all_answers f lst =
 * function with an accumulator and uses @. Note
 * all_answers f [] should evaluate to SOME [].
 *)
-let
-  val some_lst = map f lst
-  val filtered = List.filter (fn x => case x of NONE => false | SOME i => true) some_lst
-  fun summarize lst_ acc = 
-    case lst_ of
-         [] => acc
-       | x :: xs => summarize xs ((valOf x) @ acc)
+let 
+  fun loop(acc, xs) = 
+    case xs of 
+      [] => SOME acc
+    | x :: xs' => case f x of 
+                    NONE => NONE
+                  | SOME y => loop(y @ acc, xs')
 in
-  if List.length(lst) = 0
-  then SOME []
-  else if List.length(filtered) = List.length(lst)
-  then SOME (summarize filtered [])
-  else NONE
+  loop([], lst)
 end
+
 
 fun count_wildcards p = 
 (*
