@@ -80,14 +80,14 @@ fun longest_string_helper f =
 * then the function returned has the same
 * behavior as longest_string1.
 *)
-foldl (fn (x,curr) => if f(x, curr) then x else curr) ""
+foldl (fn (x,curr) => if f(String.size x, String.size curr) then x else curr) ""
 
 
 (* longest_string3 has the same behavior as longest_string1 *)
-val longest_string3 = longest_string_helper (fn (x, y) => String.size(x) > String.size(y))
+val longest_string3 = longest_string_helper (fn (x, y) => x > y)
 
 (* longest_string4 has the same behavior as longest_string2 *)
-val longest_string4 = longest_string_helper (fn (x, y) => String.size(x) >= String.size(y))
+val longest_string4 = longest_string_helper (fn (x, y) => x >= y)
 
 (*
 * Write a function longest_capitalized that takes a string list and returns the
