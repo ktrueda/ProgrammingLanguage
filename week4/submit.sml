@@ -229,41 +229,19 @@ fun match (v, p) =
 * These are hints: We are
 * not requiring all_answers and ListPair.zip here, but they make it easier.
 *)
-let
-  fun zip(lst1, lst2) = 
-    case (lst1, lst2) of
-      ([], []) => []
-    | (lst1_hd::lst1_tl, lst2_hd::lst2_tl) => (lst1_hd, lst2_hd) :: zip(lst1_tl, lst2_tl)
-in
-  case p of 
-    Wildcard => SOME []
-  | Variable i => SOME [(i, v)]
-  | UnitP => ( 
-    case v of 
-      Unit => SOME []
-    | _ => NONE)
-  | ConstP(i) => (
-    case v of 
-      Const j => if i = j then SOME [] else NONE
-    | _ => NONE )
-  | TupleP is => (
-    case v of 
-      Tuple js => 
-        if List.length js = List.length is 
-        then 
-          let
-            val vps : (valu * pattern) list = zip(js, is)
-            val somenone_lst: (string * valu) list option list = map (fn (x, y) => match(x, y)) vps
-          in
-            all_answers (fn i => i) somenone_lst
-          end
-        else NONE
-    | _ => NONE)
-  | ConstructorP (c, i) => ( 
-    case v of 
-      Constructor (cn, j) => if c = cn then match(j, i) else NONE
-    | _ => NONE)
-end
+case (v, p) of
+  (_, Wildcard) => SOME []
+| (_, Variable(s)) => SOME[(s, v)]
+| (Unit, UnitP) => SOME []
+| (Const(i), ConstP(j)) => if i = j then SOME [] else NONE
+| (Tuple(vs), TupleP(ps)) => if List.length vs = List.length ps
+                             then all_answers match (ListPair.zip(vs, ps))
+                             else NONE
+| (Constructor(s1, v), ConstructorP(s2, p)) => if s1 = s2
+                                               then match(v ,p)
+                                               else NONE
+| _ => NONE
+
 
 fun first_match v ps = 
 (*
