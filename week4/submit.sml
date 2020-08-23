@@ -153,21 +153,14 @@ in
 end
 
 
-fun count_wildcards p = 
+val count_wildcards = 
 (*
 * Use g to define a function count_wildcards that takes a pattern and returns
 * how many Wildcard patterns it contains.
 *)
-case p of
-     Wildcard => 1
-   | Variable i => 0
-   | UnitP => 0
-   | ConstP i => 0
-   | TupleP is => foldl (fn (x,y) => x+y) 0 (map count_wildcards is)
-   | ConstructorP (c, i)=> count_wildcards i  
+g (fn x => 1) (fn x => 0) 
 
-
-fun count_wild_and_variable_lengths p = 
+val count_wild_and_variable_lengths = 
 (* 
 * Use g to define a function count_wild_and_variable_lengths that takes a
 * pattern and returns the number of Wildcard patterns it contains plus the
@@ -175,13 +168,7 @@ fun count_wild_and_variable_lengths p =
 * it contains. (Use String.size. We care only about variable names; the
 * constructor names are not relevant.)
 *)
-case p of
-     Wildcard => 1
-   | Variable i => String.size(i)
-   | UnitP => 0
-   | ConstP i => 0
-   | TupleP is => foldl (fn (x,y) => x+y) 0 (map count_wild_and_variable_lengths is)
-   | ConstructorP (c, i)=> count_wild_and_variable_lengths i  
+g (fn x => 1) (fn x => String.size(x))
 
 fun count_some_var (s, p) = 
 (*
@@ -189,13 +176,7 @@ fun count_some_var (s, p) =
 * (as a pair) and returns the number of times the string appears as a variable
 * in the pattern.  We care only about variable names; the constructor names are not relevant.
 *)
-case p of
-     Wildcard => 0
-   | Variable i => if i = s then 1 else 0
-   | UnitP => 0
-   | ConstP i => 0
-   | TupleP is => foldl (fn (x,y) => count_some_var(s, x) + y) 0 is
-   | ConstructorP (c, i)=> count_some_var(s, i) 
+g (fn x => 0) (fn x => if x = s then 1 else 0) p
 
 
 fun check_pat p = 
