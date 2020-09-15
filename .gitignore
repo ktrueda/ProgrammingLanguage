@@ -2,4 +2,6 @@
 .DS_Store
 tempCodeRunnerFile.sml
 *.rkt~
+*.rkt#2#
+
 
