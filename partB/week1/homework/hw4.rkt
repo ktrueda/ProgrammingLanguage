@@ -23,9 +23,15 @@
 (define (list-nth-mod xs n) (list-nth-mod-helper xs (modulo n (length xs))))
 
 (define (stream-for-n-steps-helper s n acc)
-  (cond [(= n 0) acc]
+  (cond [(= n 0) (reverse acc)]
         [#t (stream-for-n-steps-helper (cdr (s)) (- n 1) (cons (car (s)) acc))]))
 
 (define (stream-for-n-steps s n)
   (stream-for-n-steps-helper s n null))
-  
+
+
+(define funny-number-stream
+         (letrec ([f (lambda (x)
+                       (cond [(= 0 (modulo x 5)) (cons (* -1 x) (lambda () (f (+ x 1))))]
+                             [#t (cons x (lambda () (f (+ x 1))))]))])
+  (lambda () (f 1))))
