@@ -35,3 +35,10 @@
                        (cond [(= 0 (modulo x 5)) (cons (* -1 x) (lambda () (f (+ x 1))))]
                              [#t (cons x (lambda () (f (+ x 1))))]))])
   (lambda () (f 1))))
+
+
+(define dan-then-dog
+         (letrec ([f (lambda (x)
+                       (cond [(= 1 (modulo x 2)) (cons "dan.jpg" (lambda () (f (+ x 1))))]
+                             [#t (cons "dog.jpg" (lambda () (f (+ x 1))))]))])
+  (lambda () (f 1))))
