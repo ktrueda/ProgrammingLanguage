@@ -17,12 +17,14 @@
 
 
 (define (list-nth-mod-helper xs n)
-  (cond [(< n 0) (error "list-nth-mod: negative number")]
-        [(null? xs) (error "list-nth-mod: negative number")]
+  (cond 
         [(= n 0) (car xs)]
         [#t (cond [(= n 0) (car xs)]
                     [#t (list-nth-mod-helper (cdr xs) (- n 1))])]))
-(define (list-nth-mod xs n) (list-nth-mod-helper xs (modulo n (length xs))))
+(define (list-nth-mod xs n)
+  (cond [(< n 0) (error "list-nth-mod: negative number")]
+        [(null? xs) (error "list-nth-mod: negative number")]
+        [#t (list-nth-mod-helper xs (modulo n (length xs)))]))
 
 (define (stream-for-n-steps s n)
   (letrec ([f (lambda (s n acc)
