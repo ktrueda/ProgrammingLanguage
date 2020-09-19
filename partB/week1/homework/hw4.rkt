@@ -3,6 +3,8 @@
 
 (provide (all-defined-out)) ;; so we can put tests in a second file
 
+(define ones (lambda () (cons 1 ones)))
+
 ;; put your code below
 
 (define (sequence low high stride)
@@ -42,3 +44,12 @@
                        (cond [(= 1 (modulo x 2)) (cons "dan.jpg" (lambda () (f (+ x 1))))]
                              [#t (cons "dog.jpg" (lambda () (f (+ x 1))))]))])
   (lambda () (f 1))))
+
+
+(define (stream-add-zero s)
+  (lambda () (cons
+              (cons 0 (car (s)))
+              (lambda () ( (stream-add-zero (cdr (s))))))))
+
+
+
