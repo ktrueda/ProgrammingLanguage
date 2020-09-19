@@ -62,6 +62,21 @@
   (letrec ([f (lambda (i)
                 (cond
                   [(>= i (vector-length vec)) #t]
-                  [(= v (car (vector-ref vec i))) (vector-ref vec i)]
+                  [(and (pair? (vector-ref vec i)) (= v (car (vector-ref vec i)))) (vector-ref vec i)]
                   [#t (f (+ i 1))]))])
     (f 0)))
+
+
+(define (cached-assoc xs n)
+  (letrec ([memo (make-vector n)]
+           [next-index 0]
+           [f (lambda (v)
+                (cond [(pair? (vector-assoc v memo)) (vector-assoc v memo)]
+                      [#t
+                       (let ([new-ans (assoc v xs)])
+                         (begin
+                           (vector-set! memo next-index new-ans)
+                           (set! next-index (modulo (+ next-index 1) n))
+                           new-ans))]))])
+                             
+    f))
