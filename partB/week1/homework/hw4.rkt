@@ -53,3 +53,9 @@
 
 
 
+(define (cycle-lists xs ys)
+  (letrec ([f (lambda (x)
+                (cons
+                 (cons (list-ref xs (modulo x (length xs))) (list-ref ys (modulo x (length ys))))
+                 (lambda () (f (+ x 1)))))])
+    (lambda () (f 0))))
