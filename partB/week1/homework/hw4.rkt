@@ -64,7 +64,7 @@
   (letrec ([f (lambda (i)
                 (cond
                   [(>= i (vector-length vec)) #f]
-                  [(and (pair? (vector-ref vec i)) (= v (car (vector-ref vec i)))) (vector-ref vec i)]
+                  [(and (pair? (vector-ref vec i)) (equal? v (car (vector-ref vec i)))) (vector-ref vec i)]
                   [#t (f (+ i 1))]))])
     (f 0)))
 
