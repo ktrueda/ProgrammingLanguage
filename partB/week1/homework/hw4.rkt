@@ -59,3 +59,11 @@
                  (cons (list-ref xs (modulo x (length xs))) (list-ref ys (modulo x (length ys))))
                  (lambda () (f (+ x 1)))))])
     (lambda () (f 0))))
+
+(define (vector-assoc v vec)
+  (letrec ([f (lambda (i)
+                (cond
+                  [(>= i (vector-length vec)) #t]
+                  [(= v (car (vector-ref vec i))) (vector-ref vec i)]
+                  [#t (f (+ i 1))]))])
+    (f 0)))
