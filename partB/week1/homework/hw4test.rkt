@@ -64,8 +64,8 @@
    (check-equal? ((cached-assoc (list (cons 1 2) (cons 3 4)) 3) 1) (cons 1 2) "cached-assoc test")
    
    ; while-less test
-   ;(check-equal? (while-less 7 do (begin (set! a (+ a 1)) a)) #t "while-less test")
-   
+   (check-equal? (while-less 7 do (begin (set! a (+ a 1)) (print "A") a)) #t "while-less test")
+   (check-equal? (while-less 7 do (begin (set! a (+ a 1)) (print "B") a)) #t "while-less test")
    ;
    ))
 

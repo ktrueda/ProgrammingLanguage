@@ -83,3 +83,18 @@
                            new-ans))]))])
                              
     f))
+
+
+(define-syntax while-less
+  (syntax-rules (do)
+               [(while-less e1 do e2)
+                (let ([th e1])
+                  (letrec ([loop (lambda ()
+                                   (let ([e2v e2])
+                                     (if (<= th e2v)
+                                       #t
+                                       (loop))))])
+                    (loop)))]))
+                                       
+                                       
+                        
