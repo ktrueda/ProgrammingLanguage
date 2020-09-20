@@ -21,6 +21,7 @@
         [(= n 0) (car xs)]
         [#t (cond [(= n 0) (car xs)]
                     [#t (list-nth-mod-helper (cdr xs) (- n 1))])]))
+
 (define (list-nth-mod xs n)
   (cond [(< n 0) (error "list-nth-mod: negative number")]
         [(null? xs) (error "list-nth-mod: negative number")]
@@ -56,7 +57,7 @@
 (define (cycle-lists xs ys)
   (letrec ([f (lambda (x)
                 (cons
-                 (cons (list-ref xs (modulo x (length xs))) (list-ref ys (modulo x (length ys))))
+                 (cons (list-nth-mod xs x) (list-nth-mod ys x))
                  (lambda () (f (+ x 1)))))])
     (lambda () (f 0))))
 
