@@ -68,6 +68,7 @@
                                (int-num (eval-under-env (ifgreater-e2 e) env)))
                             (eval-under-env (ifgreater-e3 e) env)
                             (eval-under-env (ifgreater-e4 e) env))]
+        [(mlet? e) (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (mlet-e e)) env))]
         [#t (error (format "bad MUPL expression: ~v" e))]))
 
 ;; Do NOT change
