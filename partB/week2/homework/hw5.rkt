@@ -23,6 +23,20 @@
 ;; Problem 1
 
 ;; CHANGE (put your solutions here)
+(define (racketlist->mupllist racketlist)
+  (letrec ([f (lambda (x)
+               (cond [(null? x) (aunit)]
+                     [#t (apair (car x) (f (cdr x)))]))])
+    (f racketlist)))
+
+
+(define (mupllist->racketlist mupllist)
+  (letrec ([f (lambda (x)
+              (cond [(aunit? x) null]
+                    [(aunit? (apair-e2 x)) (list (apair-e1 x))]
+                    [#t (cons (apair-e1 x) (f (apair-e2 x)))]))])
+    (f mupllist)))
+
 
 ;; Problem 2
 
