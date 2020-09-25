@@ -44,7 +44,7 @@
 ;; Do NOT change this function
 (define (envlookup env str)
   (begin
-    ;(print env)
+    (println env)
     (cond [(null? env) (error "unbound variable during evaluation" str)]
         [(equal? (car (car env)) str) (cdr (car env))]
         [#t (envlookup (cdr env) str)])))
@@ -54,8 +54,7 @@
 ;; We will test eval-under-env by calling it directly even though
 ;; "in real life" it would be a helper function of eval-exp.
 (define (eval-under-env e env)
-  (cond [(var? e) 
-         (envlookup env (var-string e))]
+  (cond [(var? e) (envlookup env (var-string e))]
         [(add? e) 
          (let ([v1 (eval-under-env (add-e1 e) env)]
                [v2 (eval-under-env (add-e2 e) env)])
@@ -63,18 +62,32 @@
                     (int? v2))
                (int (+ (int-num v1) 
                        (int-num v2)))
-               (error "MUPL addition applied to non-number")))]
+               (begin
+                 (println v1)
+                 (println v2)
+                 (error "MUPL addition applied to non-number "))))]
         ;; CHANGE add more cases here
         [(int? e) e]
         [(ifgreater? e) (if (> (int-num (eval-under-env (ifgreater-e1 e) env))
                                (int-num (eval-under-env (ifgreater-e2 e) env)))
                             (eval-under-env (ifgreater-e3 e) env)
                             (eval-under-env (ifgreater-e4 e) env))]
-        [(mlet? e) (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (mlet-e e)) env))]
-        [(call? e) (eval-under-env (fun-body (closure-fun (call-funexp e)))
-                                   (cons (cons (fun-formal (closure-fun (call-funexp e))) (call-actual e)) (closure-env (call-funexp e))))]
+        [(mlet? e) (let ([mlet--var (mlet-var e)]
+                         [mlet--e (eval-under-env (mlet-e e) env)]
+                         [mlet--body (mlet-body e)])
+                     (eval-under-env mlet--body (cons (cons mlet--var mlet--e) env)))]
+        [(call? e) (let* ([call--funexp (eval-under-env (call-funexp e) env)]
+                         [call--actual (eval-under-env (call-actual e) env)]
+                         [fun--body (fun-body (eval-under-env (closure-fun call--funexp) env))])
+                     (eval-under-env fun--body
+                                   (cons (cons (fun-formal (closure-fun call--funexp)) call--actual) (closure-env call--funexp))))]
         [(snd? e) (apair-e2 (snd-e e))]
         [(isaunit? e) (if (aunit? (isaunit-e e)) (int 1) (int 0))]
+        [(closure? e) (closure (append (closure-env e) env) (eval-under-env (closure-fun e) env))]
+        [(aunit? e) e]
+        [(fun? e) e]
+        [(mlet? e) e]
+        [(apair? e) (apair (eval-under-env (apair-e1 e) env) (eval-under-env (apair-e2 e) env))]
         [#t (error (format "bad MUPL expression: ~v" e))]))
 
 ;; Do NOT change
@@ -95,7 +108,13 @@
 
 ;; Problem 4
 
-(define mupl-map "CHANGE")
+(define mupl-map (closure '() (fun #f "fn" (closure '()
+                                                    (fun #f "lst"
+                                                         (apair 
+                                                          (call (closure '() (var "fn")) (int 1) )
+                                                         (aunit))
+
+                                            )))))
 
 (define mupl-mapAddN 
   (mlet "map" mupl-map
