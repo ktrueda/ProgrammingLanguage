@@ -74,6 +74,7 @@
         [(call? e) (eval-under-env (fun-body (closure-fun (call-funexp e)))
                                    (cons (cons (fun-formal (closure-fun (call-funexp e))) (call-actual e)) (closure-env (call-funexp e))))]
         [(snd? e) (apair-e2 (snd-e e))]
+        [(isaunit? e) (if (aunit? (isaunit-e e)) (int 1) (int 0))]
         [#t (error (format "bad MUPL expression: ~v" e))]))
 
 ;; Do NOT change

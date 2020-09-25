@@ -39,7 +39,10 @@
    (check-equal? (eval-exp (snd (apair (int 1) (aunit)))) (aunit) "snd test")
    
    ;; isaunit test
-   ;(check-equal? (eval-exp (isaunit (closure '() (fun #f "x" (aunit))))) (int 0) "isaunit test")
+   (check-equal? (eval-exp (isaunit (aunit))) (int 1) "isaunit test")
+   (check-equal? (eval-exp (isaunit (closure '() (fun #f "x" (aunit))))) (int 0) "isaunit test")
+   (check-equal? (eval-exp (isaunit (call (closure '() (fun #f "x" (var "x"))) (int 1)))) (int 0) "isaunit test")
+   (check-equal? (eval-exp (isaunit (eval-exp (call (closure '() (fun #f "x" (var "x"))) (aunit))))) (int 1) "isaunit test")
    
    ;; ifaunit test
    ;(check-equal? (eval-exp (ifaunit (int 1) (int 2) (int 3))) (int 3) "ifaunit test")
