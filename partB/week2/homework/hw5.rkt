@@ -89,7 +89,9 @@
 
 (define (mlet* lstlst e2) (eval-under-env e2 lstlst))
 
-(define (ifeq e1 e2 e3 e4) "CHANGE")
+(define (ifeq e1 e2 e3 e4)
+  (cond [(and (int? e1) (int? e2) (= (int-num e1) (int-num e2)) e3)]
+        [#t e4]))
 
 ;; Problem 4
 
