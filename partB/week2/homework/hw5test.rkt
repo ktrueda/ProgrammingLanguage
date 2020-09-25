@@ -45,7 +45,7 @@
    (check-equal? (eval-exp (isaunit (eval-exp (call (closure '() (fun #f "x" (var "x"))) (aunit))))) (int 1) "isaunit test")
    
    ;; ifaunit test
-   ;(check-equal? (eval-exp (ifaunit (int 1) (int 2) (int 3))) (int 3) "ifaunit test")
+   (check-equal? (eval-exp (ifaunit (int 1) (int 2) (int 3))) (int 3) "ifaunit test")
    
    ;; mlet* test
    ;(check-equal? (eval-exp (mlet* (list (cons "x" (int 10))) (var "x"))) (int 10) "mlet* test")

@@ -83,7 +83,9 @@
         
 ;; Problem 3
 
-(define (ifaunit e1 e2 e3) "CHANGE")
+(define (ifaunit e1 e2 e3)
+  (cond [(aunit? e1) e2]
+        [#t e3]))
 
 (define (mlet* lstlst e2) "CHANGE")
 
