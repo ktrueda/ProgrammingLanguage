@@ -81,13 +81,14 @@
                          [fun--body (fun-body (eval-under-env (closure-fun call--funexp) env))])
                      (eval-under-env fun--body
                                    (cons (cons (fun-formal (closure-fun call--funexp)) call--actual) (closure-env call--funexp))))]
-        [(snd? e) (apair-e2 (snd-e e))]
-        [(isaunit? e) (if (aunit? (isaunit-e e)) (int 1) (int 0))]
+        [(snd? e) (apair-e2 (eval-under-env (snd-e e) env))]
+        [(isaunit? e) (if (aunit? (eval-under-env (isaunit-e e) env)) (int 1) (int 0))]
         [(closure? e) (closure (append (closure-env e) env) (eval-under-env (closure-fun e) env))]
         [(aunit? e) e]
         [(fun? e) e]
         [(mlet? e) e]
         [(apair? e) (apair (eval-under-env (apair-e1 e) env) (eval-under-env (apair-e2 e) env))]
+        [(fst? e) (apair-e1 (eval-under-env (fst-e e) env))]
         [#t (error (format "bad MUPL expression: ~v" e))]))
 
 ;; Do NOT change
@@ -97,10 +98,11 @@
 ;; Problem 3
 
 (define (ifaunit e1 e2 e3)
-  (cond [(aunit? e1) e2]
-        [#t e3]))
+  (ifgreater (isaunit e1) (int 0) e2 e3))
 
-(define (mlet* lstlst e2) (eval-under-env e2 lstlst))
+(define (mlet* lstlst e2) (ifgreater (isaunit lstlst) (int 0)
+                                     e2
+                                     (mlet* (snd lstlst) e2)))
 
 (define (ifeq e1 e2 e3 e4)
   (cond [(and (int? e1) (int? e2) (= (int-num e1) (int-num e2)) e3)]
@@ -108,17 +110,18 @@
 
 ;; Problem 4
 
-(define mupl-map (closure '() (fun #f "fn" (closure '()
-                                                    (fun #f "lst"
-                                                         (apair 
-                                                          (call (closure '() (var "fn")) (int 1) )
-                                                         (aunit))
+;(define mupl-map (closure '() (fun #f "fn" (closure '()
+;                                                    (fun #f "lst"
+;                                                         (let [f (lambda (lst) (call (closure '() (var "fn"))) 
+                                                         ;(apair 
+                                                         ; (call (closure '() (var "fn")) (fst (var "lst")))
+                                                         ;(aunit))
 
-                                            )))))
+;                                           )))))
 
-(define mupl-mapAddN 
-  (mlet "map" mupl-map
-        "CHANGE (notice map is now in MUPL scope)"))
+;(define mupl-mapAddN 
+;  (mlet "map" mupl-map
+;        "CHANGE (notice map is now in MUPL scope)"))
 
 ;; Challenge Problem
 
