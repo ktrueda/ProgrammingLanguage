@@ -78,9 +78,15 @@
                      (eval-under-env mlet--body (cons (cons mlet--var mlet--e) env)))]
         [(call? e) (let* ([call--funexp (eval-under-env (call-funexp e) env)]
                          [call--actual (eval-under-env (call-actual e) env)]
-                         [fun--body (fun-body (eval-under-env (closure-fun call--funexp) env))])
-                     (eval-under-env fun--body
-                                   (cons (cons (fun-formal (closure-fun call--funexp)) call--actual) (closure-env call--funexp))))]
+                         [fun--body (fun-body (eval-under-env (closure-fun call--funexp) env))]
+                         [newenv (append
+                                    (list
+                                         (cons (fun-formal (closure-fun call--funexp)) call--actual)
+                                         (cons (fun-nameopt (closure-fun call--funexp)) call--funexp)
+                                    )
+                                    (closure-env (eval-under-env (call-funexp e) env))
+                                    env )])
+                     (eval-under-env fun--body newenv))]
         [(snd? e) (apair-e2 (eval-under-env (snd-e e) env))]
         [(isaunit? e) (if (aunit? (eval-under-env (isaunit-e e) env)) (int 1) (int 0))]
         [(closure? e) (closure (append (closure-env e) env) (eval-under-env (closure-fun e) env))]
