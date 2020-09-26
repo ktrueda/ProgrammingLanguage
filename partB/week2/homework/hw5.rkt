@@ -44,7 +44,7 @@
 ;; Do NOT change this function
 (define (envlookup env str)
   (begin
-    (println env)
+    ;(println env)
     (cond [(null? env) (error "unbound variable during evaluation" str)]
         [(equal? (car (car env)) str) (cdr (car env))]
         [#t (envlookup (cdr env) str)])))
@@ -117,9 +117,8 @@
                                               (apair (call (closure '() (var "fn")) (fst (var "lst"))) (call (closure '() (var "frec")) (snd (var "lst"))))))))
                            (closure '() (var "frec"))))))
 
-;(define mupl-mapAddN 
-;  (mlet "map" mupl-map
-;        "CHANGE (notice map is now in MUPL scope)"))
+(define mupl-mapAddN 
+        (closure '() (fun #f "d" (call mupl-map (fun #f "x" (add (var "d") (var "x")))))))
 
 ;; Challenge Problem
 
