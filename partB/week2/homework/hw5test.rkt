@@ -81,21 +81,27 @@
                                    ) (add (var "x") (var "y"))))) (int 41) "mlet* test")
    
    ;; ifeq test
-   ;(check-equal? (eval-exp (ifeq (int 1) (int 2) (int 3) (int 4))) (int 4) "ifeq test")
+   (check-equal? (eval-exp (ifeq (int 1) (int 2) (int 3) (int 4))) (int 4) "ifeq test")
+   (check-equal? (eval-exp (ifeq (int 1) (int 1) (int 3) (int 4))) (int 3) "ifeq test")
+   (check-equal? (eval-exp (ifeq (int 1) (int 0) (int 3) (int 4))) (int 4) "ifeq test")
+   (check-equal? (eval-exp (mlet* (list (cons "x" (int 10))) (ifeq (var "x") (int 10) (int 3) (int 4)))) (int 3) "ifeq test")
+   (check-equal? (eval-exp (mlet* (list (cons "x" (int 10)) (cons "y" (int 10))) (ifeq (var "x") (var "y") (int 3) (int 4)))) (int 3) "ifeq test")
    
    ;; mupl-map test
    ; how to write code to process list in MUPL
-   ;(eval-exp (mlet* (list
-   ;                  (cons "lst" (apair (int 10) (apair (int 20) (aunit))))
-   ;                  (cons "f" (fun #f "x" (add (var "x") (int 1))))
-   ;                  (cons "frec" (fun #f "lst" (ifaunit (var "lst")
-   ;                                                      (aunit)
-   ;                                                      (apair (call (closure '() (var "f")) (fst (var "lst"))) (call (closure '() (var "frec")) (snd (var "lst"))))))))
-   ;                 (call (closure '() (var "frec")) (var "lst"))))
+   (eval-exp (mlet* (list
+                     (cons "lst" (apair (int 10) (apair (int 20) (aunit))))
+                     (cons "f" (fun #f "x" (add (var "x") (int 1))))
+                     (cons "frec" (fun #f "lst" (ifaunit (var "lst")
+                                                         (aunit)
+                                                         (apair (call (closure '() (var "f")) (fst (var "lst"))) (call (closure '() (var "frec")) (snd (var "lst"))))))))
+                     (call (closure '() (var "frec")) (var "lst"))))
 
    
-   ;(check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
-   ;              (apair (int 8) (aunit)) "mupl-map test")
+   (check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
+                 (apair (int 8) (aunit)) "mupl-map test")
+   (check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (apair (int 2) (aunit))))) 
+                 (apair (int 8) (apair (int 9) (aunit))) "mupl-map test")
    
    ;; problems 1, 2, and 4 combined test
    ;(check-equal? (mupllist->racketlist

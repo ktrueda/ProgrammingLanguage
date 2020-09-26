@@ -100,24 +100,22 @@
 (define (ifaunit e1 e2 e3)
   (ifgreater (isaunit e1) (int 0) e2 e3))
 
-(define (mlet* lstlst e2) (ifgreater (isaunit lstlst) (int 0)
-                                     e2
-                                     (mlet* (snd lstlst) e2)))
+(define (mlet* lstlst e2) (if (null? lstlst)
+                              e2
+                              (mlet* (cdr lstlst) (mlet (car(car lstlst)) (cdr (car lstlst)) e2 ))))
 
 (define (ifeq e1 e2 e3 e4)
-  (cond [(and (int? e1) (int? e2) (= (int-num e1) (int-num e2)) e3)]
-        [#t e4]))
+  (ifgreater e1 e2 e4 (ifgreater e2 e1 e4 e3)))
 
 ;; Problem 4
 
-;(define mupl-map (closure '() (fun #f "fn" (closure '()
-;                                                    (fun #f "lst"
-;                                                         (let [f (lambda (lst) (call (closure '() (var "fn"))) 
-                                                         ;(apair 
-                                                         ; (call (closure '() (var "fn")) (fst (var "lst")))
-                                                         ;(aunit))
-
-;                                           )))))
+(define mupl-map
+  (closure '() (fun #f "fn"
+                    (mlet* (list
+                            (cons "frec" (fun #f "lst" (ifaunit (var "lst")
+                                              (aunit)
+                                              (apair (call (closure '() (var "fn")) (fst (var "lst"))) (call (closure '() (var "frec")) (snd (var "lst"))))))))
+                           (closure '() (var "frec"))))))
 
 ;(define mupl-mapAddN 
 ;  (mlet "map" mupl-map
