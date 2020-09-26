@@ -68,7 +68,7 @@
                  (int 2) "call test4")
    (check-equal? (eval-exp (call (closure '() (fun "sum-to" "n" (ifgreater (var "n") (int 1) (add (var "n") (call (var "sum-to") (add (var "n") (int -1)))) (int 1))))
                            (int 10)))
-                 (int 2) "call test4")
+                 (int 55) "call test4")
 
 
 
