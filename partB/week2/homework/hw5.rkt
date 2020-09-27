@@ -126,8 +126,11 @@
                                               (apair (call (closure '() (var "fn")) (fst (var "lst"))) (call (closure '() (var "frec")) (snd (var "lst"))))))))
                            (closure '() (var "frec"))))))
 
+
 (define mupl-mapAddN 
-        (closure '() (fun #f "d" (call mupl-map (fun #f "x" (add (var "d") (var "x")))))))
+  (mlet "map" mupl-map
+        (closure '() (fun #f "d" (call (var "map") (fun #f "x" (add (var "d") (var "x"))))))))
+
 
 ;; Challenge Problem
 
