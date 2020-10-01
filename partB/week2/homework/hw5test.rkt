@@ -34,18 +34,20 @@
    ;; call test
    (check-equal? (eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int 1))) (int 8) "call test1")
    (check-equal? (eval-exp (call (closure '() (fun #f "x" (var "x"))) (int 1))) (int 1) "call test2")
-   (check-equal? (eval-exp (call (closure '() (fun #f "x" (fun #f "y" (int 2)))) (int 1))) (fun #f "y" (int 2)) "call test3")
+   (check-equal? (eval-exp (call (closure '() (fun #f "x" (fun #f "y" (int 2)))) (int 1)))
+                 (closure
+                  (list
+                   (cons "x" (int 1))
+                   (cons #f (closure '() (fun #f "x" (fun #f "y" (int 2))))))
+                  (fun #f "y" (int 2))) "call test3")
    (check-equal? (eval-exp (call (closure '()
                                           (fun #f "x" (closure '() (fun #f "y" (add (var "x") (var "y")))))
                                  )
                                 (int 1) ;x
                            ))                        
-                 (closure (list (cons "x" (int 1)) (cons #f (closure '() (fun #f "x" (closure '() (fun #f "y" (add (var "x") (var "y")))))))) (fun #f "y" (add (var "x") (var "y")))) "call test4") ; return closure
-   (check-equal? (eval-exp (call (call (closure '() (fun #f "x"
-                                                   (closure '()
-                                                            (fun #f "y" (add (var "x") (var "y")))
-                                                   )
-                                               ))
+                 (closure '() (fun #f "y" (add (var "x") (var "y")))) "call test4") ; return closure
+   (check-equal? (eval-exp (call (call (fun #f "x"
+                                           (fun #f "y" (add (var "x") (var "y"))))
                                 (int 1) ;x
                            )
                            (int 2); y
@@ -120,16 +122,16 @@
    ;                  (call (closure '() (var "frec")) (var "lst"))))
 
    
-   ;(check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
-   ;              (apair (int 8) (aunit)) "mupl-map test")
-   ;(check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (apair (int 2) (aunit))))) 
-   ;              (apair (int 8) (apair (int 9) (aunit))) "mupl-map test")
+   (check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
+                 (apair (int 8) (aunit)) "mupl-map test")
+   (check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (apair (int 2) (aunit))))) 
+                (apair (int 8) (apair (int 9) (aunit))) "mupl-map test")
    
    ;; problems 1, 2, and 4 combined test
-   ;(check-equal? (mupllist->racketlist
-   ;  (eval-exp (call (call mupl-mapAddN (int 7))
-   ;                (racketlist->mupllist 
-   ;                 (list (int 3) (int 4) (int 9)))))) (list (int 10) (int 11) (int 16)) "combined test")
+   (check-equal? (mupllist->racketlist
+     (eval-exp (call (call mupl-mapAddN (int 7))
+                   (racketlist->mupllist 
+                    (list (int 3) (int 4) (int 9)))))) (list (int 10) (int 11) (int 16)) "combined test")
    
    ))
 

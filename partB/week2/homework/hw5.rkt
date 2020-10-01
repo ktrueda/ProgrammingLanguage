@@ -72,26 +72,23 @@
                                (int-num (eval-under-env (ifgreater-e2 e) env)))
                             (eval-under-env (ifgreater-e3 e) env)
                             (eval-under-env (ifgreater-e4 e) env))]
-        [(mlet? e) (let* ([mlet--var (mlet-var e)]
-                         [mlet--e (eval-under-env (mlet-e e) env)]
-                         [mlet--body (mlet-body e)])
-                     (eval-under-env mlet--body (cons (cons mlet--var mlet--e) env)))]
+        [(mlet? e) (let ([v (mlet-var e)]
+                        [val (eval-under-env (mlet-e e) env)])
+                     (eval-under-env (mlet-body e)  (append (list (cons v val)) env)))]
         [(call? e) (let ([v1 (eval-under-env (call-funexp e) env)]
                          [v2 (eval-under-env (call-actual e) env)])
                      (if (not (closure? v1))
                          (error "MUPL call applied to non-closure ")
-                         (let ([v3 (eval-under-env (fun-body (closure-fun v1))
+                         (eval-under-env (fun-body (closure-fun v1))
                                                    (append (list
                                                             (cons (fun-formal (closure-fun v1)) v2)
                                                             (cons (fun-nameopt (closure-fun v1)) v1)
-                                                            ) (closure-env v1)))]) 
-                           v3)))
-                         ]
+                                                            ) (closure-env v1)))))]
         [(snd? e) (apair-e2 (eval-under-env (snd-e e) env))]
         [(isaunit? e) (if (aunit? (eval-under-env (isaunit-e e) env)) (int 1) (int 0))]
-        [(closure? e) (closure (append (closure-env e) env) (eval-under-env (closure-fun e) (append (closure-env e) env)))]
+        [(closure? e) e]
         [(aunit? e) e]
-        [(fun? e) e]
+        [(fun? e) (closure env e)]
         [(mlet? e) e]
         [(apair? e) (apair (eval-under-env (apair-e1 e) env) (eval-under-env (apair-e2 e) env))]
         [(fst? e) (apair-e1 (eval-under-env (fst-e e) env))]
@@ -121,15 +118,15 @@
 (define mupl-map
   (closure '() (fun #f "fn"
                     (mlet* (list
-                            (cons "frec" (closure '() (fun "frec" "lst" (ifaunit (var "lst")
+                            (cons "frec" (fun "frec" "lst" (ifaunit (var "lst")
                                               (aunit)
-                                              (apair (call (closure '() (var "fn")) (fst (var "lst"))) (call (var "frec") (snd (var "lst")))))))))
+                                              (apair (call (var "fn") (fst (var "lst"))) (call (var "frec") (snd (var "lst"))))))))
                            (var "frec")))))
 
 
 (define mupl-mapAddN 
   (mlet "map" mupl-map
-        (closure '() (fun #f "d" (call (var "map") (fun #f "x" (add (var "d") (var "x"))))))))
+        (fun #f "d" (call (var "map") (fun #f "x" (add (var "d") (var "x")))))))
 
 
 ;; Challenge Problem
